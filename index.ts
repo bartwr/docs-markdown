@@ -73,7 +73,7 @@ revisionId: ${file.revisionId}
     }
 
     /**
-     * Paragraphs and lists
+     * Paragraphs, lists and images
      */
     if (item.paragraph && item.paragraph.elements) {
       const styleType =
@@ -93,6 +93,9 @@ revisionId: ${file.revisionId}
       item.paragraph.elements.forEach((element) => {
         if (element.textRun && content(element) && content(element) !== "\n") {
           text += styleElement(element, styleType);
+        }
+        else if (element.inlineObjectElement && element.inlineObjectElement.inlineObjectId) {
+          text += 'IMAGE: ' + element.inlineObjectElement.inlineObjectId;
         }
       });
       text += bullet?.listId
