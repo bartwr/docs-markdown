@@ -35,6 +35,18 @@ export const fetchGoogleDocsFiles = async (files: string[]) => {
   }
 };
 
+// Find image / inline object
+const getInlineObjectUrl = (file: any, inlineObjectKeyToFind: string): any => {
+  if(! file.inlineObjects) return;
+  let url: string = '';
+  Object.keys(file.inlineObjects).forEach((key: string) => {
+    if(key == inlineObjectKeyToFind) {
+      url = file.inlineObjects[key].inlineObjectProperties?.embeddedObject?.imageProperties?.contentUri;
+    }
+  })
+  return url;
+}
+
 export const googleDocsToMarkdown = (file: docs_v1.Schema$Document) => {
   let text = `---
 title: ${file.title}
@@ -95,7 +107,8 @@ revisionId: ${file.revisionId}
           text += styleElement(element, styleType);
         }
         else if (element.inlineObjectElement && element.inlineObjectElement.inlineObjectId) {
-          text += 'IMAGE: ' + element.inlineObjectElement.inlineObjectId;
+          const imageUrl: string = getInlineObjectUrl(file, element.inlineObjectElement.inlineObjectId);
+          text += '![img]('+imageUrl+')';
         }
       });
       text += bullet?.listId
