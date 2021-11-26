@@ -1,6 +1,10 @@
 # 📝 Docs Markdown
 
-Convert a Google Docs file (API response) to Markdown
+Convert a Google Docs file (API response) to Markdown.
+
+Original repository: https://github.com/AnandChowdhary/docs-markdown.
+
+For an example app made with this library, see [gdocs-site](https://github.com/bartwr/gdocs-site).
 
 [![Node CI](https://img.shields.io/github/workflow/status/AnandChowdhary/docs-markdown/Node%20CI?label=GitHub%20CI&logo=github)](https://github.com/AnandChowdhary/docs-markdown/actions)
 [![Travis CI](https://img.shields.io/travis/AnandChowdhary/docs-markdown?label=Travis%20CI&logo=travis%20ci&logoColor=%23fff)](https://travis-ci.org/AnandChowdhary/docs-markdown)

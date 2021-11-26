@@ -61,11 +61,11 @@ revisionId: ${file.revisionId}
      */
     if (item.table?.tableRows) {
       // Make a blank header
-        const cells = item.table.tableRows[0]?.tableCells;
-        // Make a blank header
-        text += `|${cells?.map(() => "").join("|")}|\n|${cells
-          ?.map(() => "-")
-          .join("|")}|\n`;
+      const cells = item.table.tableRows[0]?.tableCells;
+      // Make a blank header
+      text += `|${cells?.map(() => "").join("|")}|\n|${cells
+        ?.map(() => "-")
+        .join("|")}|\n`;
       item.table.tableRows.forEach(({ tableCells }) => {
         const textRows: any[] = [];
         tableCells?.forEach(({ content }) => {
@@ -102,8 +102,28 @@ revisionId: ${file.revisionId}
           text += `${padding}- `;
         }
       }
+      let headingBuilder = '', elementCounter = 1;
       item.paragraph.elements.forEach((element) => {
-        if (element.textRun && content(element) && content(element) !== "\n") {
+        // Headings
+        if (element.textRun && styleType && styleType.indexOf('HEADING_') > -1) {
+          // For headings, always merge multiple elements into one
+          // See https://github.com/bartwr/docs-markdown/issues/1 for context
+          //
+          // Build heading string based on the different elements
+          headingBuilder += element.textRun.content;
+          // If we are at the last element: replace element content with full heading string
+          if(elementCounter == item?.paragraph?.elements?.length) {
+            const updatedElement = {...element, ...{
+              textRun: {
+                content: headingBuilder,
+                textStyle: element.textRun.textStyle
+              }
+            }};
+            text += styleElement(updatedElement, styleType);
+          }
+          elementCounter++;
+        }
+        else if (element.textRun && content(element) && content(element) !== "\n") {
           text += styleElement(element, styleType);
         }
         else if (element.inlineObjectElement && element.inlineObjectElement.inlineObjectId) {
