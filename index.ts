@@ -56,6 +56,9 @@ revisionId: ${file.revisionId}
 
 `;
   file.body?.content?.forEach((item) => {
+    // Replace 'hard returns' to normal returns:
+    text = text.replace("\v", "<br />");
+
     /**
      * Tables
      */
@@ -123,9 +126,11 @@ revisionId: ${file.revisionId}
           }
           elementCounter++;
         }
+        // Normal paragraphs
         else if (element.textRun && content(element) && content(element) !== "\n") {
           text += styleElement(element, styleType);
         }
+        // Image
         else if (element.inlineObjectElement && element.inlineObjectElement.inlineObjectId) {
           const imageUrl: string = getInlineObjectUrl(file, element.inlineObjectElement.inlineObjectId);
           text += '![img]('+imageUrl+')';
@@ -157,6 +162,7 @@ revisionId: ${file.revisionId}
     .split("\n")
     .filter((_, i) => !linesToDelete.includes(i))
     .join("\n");
+
   return text.replace(/\n\s*\n\s*\n/g, "\n\n") + "\n";
 };
 
@@ -199,6 +205,10 @@ const content = (
 ): string | undefined => {
   const textRun = element?.textRun;
   const text = textRun?.content;
+  if (textRun?.textStyle?.italic) {
+    // Replace \n-tail
+    return text ? text.replace("\n", "") : undefined;
+  }
   if (textRun?.textStyle?.link?.url)
     return `[${text}](${textRun.textStyle.link.url})`;
   return text || undefined;
