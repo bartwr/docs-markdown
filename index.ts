@@ -78,7 +78,8 @@ revisionId: ${file.revisionId}
 
             textRows.push(
               paragraph?.elements?.map((element) =>
-                styleElement(element, styleType)?.replace(/\s+/g, "").trim()
+                // styleElement(element, styleType)?.replace(/\s+/g, "").trim()
+                styleElement(element, styleType)?.trim()
               )
             );
           });
@@ -206,6 +207,10 @@ const content = (
   const textRun = element?.textRun;
   const text = textRun?.content;
   if (textRun?.textStyle?.italic) {
+    // Replace \n-tail
+    return text ? text.replace("\n", "") : undefined;
+  }
+  if (textRun?.textStyle?.bold) {
     // Replace \n-tail
     return text ? text.replace("\n", "") : undefined;
   }
